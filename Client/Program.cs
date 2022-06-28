@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -40,19 +41,31 @@ namespace Client
 
             try
             {
-                readTask.Start();
+                //readTask.Start();
                 string msg = String.Empty;
                 socket.Connect(iPEnd);
-                do
+
+                Console.WriteLine("Send extension");
+                byte[] extansion = Encoding.Unicode.GetBytes(".png");
+                socket.Send(extansion);
+
+                byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                        "foto.png"));
+                Console.WriteLine("Send file");
+                socket.Send(data);
+
+                /*do
                 {
                     msg = String.Empty;
                     msg = Console.ReadLine();
-                    byte[] data = Encoding.Unicode.GetBytes(msg);
-                    socket.Send(data);
+                    byte[] data1 = Encoding.Unicode.GetBytes(msg);
+                    socket.Send(data1);
                     data = new byte[0];
 
                 }
-                while (!msg.Equals("-end"));
+                while (!msg.Equals("-end"));*/
+
+
 
             }
             catch (Exception ex)
@@ -62,8 +75,8 @@ namespace Client
             finally
             {
                 socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
             }
+            Console.ReadLine();
         }
     }
 }
