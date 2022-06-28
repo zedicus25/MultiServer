@@ -41,16 +41,20 @@ namespace Client
 
             try
             {
-                readTask.Start();
+                //readTask.Start();
                 string msg = String.Empty;
                 socket.Connect(iPEnd);
 
-                byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-                        "foto"));
-                socket.Send(data);
-                data = new byte[0];
+                Console.WriteLine("Send extension");
+                byte[] extansion = Encoding.Unicode.GetBytes(".png");
+                socket.Send(extansion);
 
-                do
+                byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                        "foto.png"));
+                Console.WriteLine("Send file");
+                socket.Send(data);
+
+                /*do
                 {
                     msg = String.Empty;
                     msg = Console.ReadLine();
@@ -59,7 +63,7 @@ namespace Client
                     data = new byte[0];
 
                 }
-                while (!msg.Equals("-end"));
+                while (!msg.Equals("-end"));*/
 
 
 

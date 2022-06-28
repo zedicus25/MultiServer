@@ -25,9 +25,9 @@ namespace Server
                 StringBuilder sb = new StringBuilder();
                 GetResult += GetRes;
                 clientSocket = socket.Accept();
-                FileStream fstream = new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "foto"),
-                    FileMode.Create,FileAccess.ReadWrite,FileShare.None);
-                int byteCount = 0;
+
+
+                /*int byteCount = 0;
                 byte[] buffer = new byte[256];
                 do
                 {
@@ -35,29 +35,40 @@ namespace Server
                     fstream.Write(buffer, 0, byteCount);
                 } while (clientSocket.Available > 0);
                 Console.WriteLine("Get file");
-                sb.Clear();
-                fstream.Close();
+                sb.Clear();*/
+                string extension = String.Empty;
                 do
                 {
-                    byteCount = 0;
-                    buffer = new byte[256];
-                    do
-                    {
+                   int byteCount = 0;
+                   byte[] buffer = new byte[256];
+                   do
+                   {
                         byteCount = clientSocket.Receive(buffer);
                         sb.Append(Encoding.Unicode.GetString(buffer, 0, byteCount));
+                        if (sb[0].Equals('.'))
+                        {
+                            extension = sb.ToString();
+                            Console.WriteLine("Get extension");
+                        }
+                        else
+                        {
+                            File.WriteAllBytes($"copy{extension}", buffer);
+                            Console.WriteLine("Get file");
+                        }
                     } while (clientSocket.Available > 0);
-
-                    Console.WriteLine($"Client msg:\t{sb.ToString()}");
+                   
+                    Console.Read();
+                    /*Console.WriteLine($"Client msg:\t{sb.ToString()}");
                     if (sb[0].Equals('-'))
                     {
                         byte[] data = Encoding.Unicode.GetBytes(GetResult?.Invoke(sb.ToString()));
                         clientSocket.Send(data);
-                    }
+                    }*/
                     sb.Clear();
 
 
 
-                } while (!sb.ToString().Equals("-end"));
+                } while (true);
             });
             try
             {
