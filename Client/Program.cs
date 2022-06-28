@@ -17,7 +17,7 @@ namespace Client
             const string IP_ADDR = "127.0.0.1";
             IPEndPoint iPEnd = new IPEndPoint(IPAddress.Parse(IP_ADDR), PORT);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            /*Task readTask = new Task(() =>
+            Task readTask = new Task(() =>
             {
 
                 StringBuilder sb = new StringBuilder();
@@ -37,17 +37,29 @@ namespace Client
                     }
                 } while (true);
 
-            });*/
+            });
 
             try
             {
+                readTask.Start();
+                string msg = String.Empty;
                 socket.Connect(iPEnd);
-                Console.WriteLine("Send file");
-                    byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), 
+
+                byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
                         "foto"));
-                Console.WriteLine(data);
-                    socket.Send(data);
+                socket.Send(data);
+                data = new byte[0];
+
+                do
+                {
+                    msg = String.Empty;
+                    msg = Console.ReadLine();
+                    byte[] data1 = Encoding.Unicode.GetBytes(msg);
+                    socket.Send(data1);
                     data = new byte[0];
+
+                }
+                while (!msg.Equals("-end"));
 
 
 
@@ -58,8 +70,7 @@ namespace Client
             }
             finally
             {
-                //socket.Shutdown(SocketShutdown.Both);
-                //socket.Close();
+                socket.Shutdown(SocketShutdown.Both);
             }
             Console.ReadLine();
         }

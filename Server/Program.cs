@@ -37,6 +37,27 @@ namespace Server
                 Console.WriteLine("Get file");
                 sb.Clear();
                 fstream.Close();
+                do
+                {
+                    byteCount = 0;
+                    buffer = new byte[256];
+                    do
+                    {
+                        byteCount = clientSocket.Receive(buffer);
+                        sb.Append(Encoding.Unicode.GetString(buffer, 0, byteCount));
+                    } while (clientSocket.Available > 0);
+
+                    Console.WriteLine($"Client msg:\t{sb.ToString()}");
+                    if (sb[0].Equals('-'))
+                    {
+                        byte[] data = Encoding.Unicode.GetBytes(GetResult?.Invoke(sb.ToString()));
+                        clientSocket.Send(data);
+                    }
+                    sb.Clear();
+
+
+
+                } while (!sb.ToString().Equals("-end"));
             });
             try
             {
@@ -49,12 +70,6 @@ namespace Server
             {
                 Console.WriteLine(ex.Message);
             }
-            finally
-            {
-                //clientSocket.Shutdown(SocketShutdown.Both);
-                //clientSocket.Close();
-            }
-            Console.ReadLine();
         }
         static string GetRes(string command)
         {
