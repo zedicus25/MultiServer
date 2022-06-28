@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -16,7 +17,7 @@ namespace Client
             const string IP_ADDR = "127.0.0.1";
             IPEndPoint iPEnd = new IPEndPoint(IPAddress.Parse(IP_ADDR), PORT);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Task readTask = new Task(() =>
+            /*Task readTask = new Task(() =>
             {
 
                 StringBuilder sb = new StringBuilder();
@@ -36,23 +37,19 @@ namespace Client
                     }
                 } while (true);
 
-            });
+            });*/
 
             try
             {
-                readTask.Start();
-                string msg = String.Empty;
                 socket.Connect(iPEnd);
-                do
-                {
-                    msg = String.Empty;
-                    msg = Console.ReadLine();
-                    byte[] data = Encoding.Unicode.GetBytes(msg);
+                Console.WriteLine("Send file");
+                    byte[] data = File.ReadAllBytes(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), 
+                        "foto"));
+                Console.WriteLine(data);
                     socket.Send(data);
                     data = new byte[0];
 
-                }
-                while (!msg.Equals("-end"));
+
 
             }
             catch (Exception ex)
@@ -61,9 +58,10 @@ namespace Client
             }
             finally
             {
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
+                //socket.Shutdown(SocketShutdown.Both);
+                //socket.Close();
             }
+            Console.ReadLine();
         }
     }
 }
