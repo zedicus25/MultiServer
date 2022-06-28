@@ -59,8 +59,8 @@ namespace Server
             }
             finally
             {
-                clientSocket.Shutdown(SocketShutdown.Both);
-                clientSocket.Close();
+                //clientSocket.Shutdown(SocketShutdown.Both);
+                //clientSocket.Close();
             }
         }
         static string GetRes(string command)
