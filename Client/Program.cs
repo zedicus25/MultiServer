@@ -12,7 +12,9 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            const int PORT = 8008;
+            ClientForm form = new ClientForm();
+            form.ShowDialog();
+            /*const int PORT = 8008;
             const string IP_ADDR = "127.0.0.1";
             IPEndPoint iPEnd = new IPEndPoint(IPAddress.Parse(IP_ADDR), PORT);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -63,7 +65,7 @@ namespace Client
             {
                 socket.Shutdown(SocketShutdown.Both);
                 socket.Close();
-            }
+            }*/
         }
     }
 }
