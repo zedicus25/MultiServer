@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -13,7 +14,7 @@ namespace Server
         static IPEndPoint iPEnd;
         static Socket socket;
         static Socket clientSocket;
-        static Func<string, string> GetResult;
+        static FileStream fs;
         static void Main(string[] args)
         {
             const int PORT = 8008;
@@ -21,30 +22,65 @@ namespace Server
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Task readTask = new Task(() =>
             {
-                StringBuilder sb = new StringBuilder();
-                GetResult += GetRes;
                 clientSocket = socket.Accept();
-                do
+                StringBuilder sb = new StringBuilder();
+                bool isFile = false;
+                string extension = String.Empty;
+                string command = String.Empty;
+                try
                 {
-                    int byteCount = 0;
-                    byte[] buffer = new byte[256];
                     do
                     {
-                        byteCount = clientSocket.Receive(buffer);
-                        sb.Append(Encoding.Unicode.GetString(buffer, 0, byteCount));
-                    } while (clientSocket.Available > 0);
+                        int byteCount = 0;
+                        byte[] buffer = new byte[256];
+                        do
+                        {
+                            byteCount = clientSocket.Receive(buffer);
 
-                    Console.WriteLine($"Client msg:\t{sb.ToString()}");
-                    if (sb[0].Equals('-'))
-                    {
-                        byte[] data = Encoding.Unicode.GetBytes(GetResult?.Invoke(sb.ToString()));
-                        clientSocket.Send(data);
-                    }
-                    sb.Clear();
+                            if (isFile)
+                            {
+                                WriteFile(buffer, byteCount);
+                            }
 
+                            if (isFile == false)
+                            {
+                                sb.Append(Encoding.Unicode.GetString(buffer, 0, byteCount));
+                            }
 
+                            
 
-                } while (!sb.ToString().Equals("-end"));
+                        } while (clientSocket.Available > 0);
+
+                        isFile = false;
+
+                        if(fs != null)
+                            fs.Close();
+
+                        if (sb.Length > 0)
+                        {
+                            if (sb[0].Equals('.'))
+                            {
+                                extension = sb.ToString();
+                                isFile = true;
+                                
+                                CreateStream(extension);
+                            }
+
+                            if (sb[0].Equals('-'))
+                            {
+                                command = sb.ToString();
+                            }
+                            Console.WriteLine($"Client msg {sb.ToString()}");
+                            sb.Clear();
+                        }
+
+                    } while (command.Equals("-end") == false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+              
             });
             try
             {
@@ -61,27 +97,23 @@ namespace Server
             {
                 clientSocket.Shutdown(SocketShutdown.Both);
                 clientSocket.Close();
+                if(fs != null)
+                    fs.Close();
             }
         }
-        static string GetRes(string command)
+
+        private static void CreateStream(string extension)
         {
-            switch (command)
-            {
-                case "-date":
-                    return DateTime.Now.ToShortDateString();
-                case "-time":
-                    return DateTime.Now.ToShortTimeString();
-                case "-help":
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        sb.AppendLine("-date \t displays current date");
-                        sb.AppendLine("-time \t displays current time");
-                        sb.AppendLine("-end \t close programm");
-                        return sb.ToString();
-                    }
-                default:
-                    return "Unknown command";
-            }
+            string ip = iPEnd.Address.ToString().Replace('.', ';');
+            string file = ip + "_"+ DateTime.Now.Ticks + extension;
+            fs = new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"/Server", file), FileMode.CreateNew, FileAccess.ReadWrite,  FileShare.None);
+        }
+
+        private static void WriteFile(byte[] data, int count)
+        {
+            if (fs == null)
+                return;
+            fs.Write(data, 0, count);
         }
     }
 }

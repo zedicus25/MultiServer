@@ -28,33 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.sendMessageBtn = new System.Windows.Forms.Button();
+            this.messageTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.selectedFileL = new System.Windows.Forms.Label();
+            this.sendFileBtn = new System.Windows.Forms.Button();
+            this.selectedBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // sendMessageBtn
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(234, 47);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(55, 35);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Send";
-            this.button1.UseVisualStyleBackColor = true;
+            this.sendMessageBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.sendMessageBtn.Location = new System.Drawing.Point(234, 47);
+            this.sendMessageBtn.Name = "sendMessageBtn";
+            this.sendMessageBtn.Size = new System.Drawing.Size(55, 35);
+            this.sendMessageBtn.TabIndex = 0;
+            this.sendMessageBtn.Text = "Send";
+            this.sendMessageBtn.UseVisualStyleBackColor = true;
+            this.sendMessageBtn.Click += new System.EventHandler(this.sendMessageBtn_Click);
             // 
-            // textBox1
+            // messageTB
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox1.Location = new System.Drawing.Point(12, 47);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(216, 35);
-            this.textBox1.TabIndex = 1;
+            this.messageTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.messageTB.Location = new System.Drawing.Point(12, 47);
+            this.messageTB.Name = "messageTB";
+            this.messageTB.Size = new System.Drawing.Size(216, 35);
+            this.messageTB.TabIndex = 1;
+            this.messageTB.TextChanged += new System.EventHandler(this.messageTB_TextChanged);
             // 
             // label1
             // 
@@ -83,48 +85,50 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Selected file:";
             // 
-            // label4
+            // selectedFileL
             // 
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(13, 153);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(322, 61);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Empty";
+            this.selectedFileL.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.selectedFileL.Location = new System.Drawing.Point(13, 153);
+            this.selectedFileL.Name = "selectedFileL";
+            this.selectedFileL.Size = new System.Drawing.Size(279, 61);
+            this.selectedFileL.TabIndex = 5;
+            this.selectedFileL.Text = "Empty";
             // 
-            // button2
+            // sendFileBtn
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.Location = new System.Drawing.Point(167, 231);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(122, 35);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Send File";
-            this.button2.UseVisualStyleBackColor = true;
+            this.sendFileBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.sendFileBtn.Location = new System.Drawing.Point(167, 231);
+            this.sendFileBtn.Name = "sendFileBtn";
+            this.sendFileBtn.Size = new System.Drawing.Size(122, 35);
+            this.sendFileBtn.TabIndex = 6;
+            this.sendFileBtn.Text = "Send File";
+            this.sendFileBtn.UseVisualStyleBackColor = true;
+            this.sendFileBtn.Click += new System.EventHandler(this.sendFileBtn_Click);
             // 
-            // button3
+            // selectedBtn
             // 
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button3.Location = new System.Drawing.Point(12, 231);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(122, 35);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Select File";
-            this.button3.UseVisualStyleBackColor = true;
+            this.selectedBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.selectedBtn.Location = new System.Drawing.Point(12, 231);
+            this.selectedBtn.Name = "selectedBtn";
+            this.selectedBtn.Size = new System.Drawing.Size(122, 35);
+            this.selectedBtn.TabIndex = 7;
+            this.selectedBtn.Text = "Select File";
+            this.selectedBtn.UseVisualStyleBackColor = true;
+            this.selectedBtn.Click += new System.EventHandler(this.SelectedFileBtnClick);
             // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(347, 306);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.label4);
+            this.ClientSize = new System.Drawing.Size(304, 306);
+            this.Controls.Add(this.selectedBtn);
+            this.Controls.Add(this.sendFileBtn);
+            this.Controls.Add(this.selectedFileL);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.messageTB);
+            this.Controls.Add(this.sendMessageBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -137,13 +141,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button sendMessageBtn;
+        private System.Windows.Forms.TextBox messageTB;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label selectedFileL;
+        private System.Windows.Forms.Button sendFileBtn;
+        private System.Windows.Forms.Button selectedBtn;
     }
 }
