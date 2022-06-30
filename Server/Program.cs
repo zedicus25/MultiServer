@@ -15,11 +15,13 @@ namespace Server
         static Socket socket;
         static Socket clientSocket;
         static FileStream fs;
+        static string pathForHistory;
         static void Main(string[] args)
         {
             const int PORT = 8008;
             iPEnd = new IPEndPoint(IPAddress.Parse("127.0.0.1"), PORT);
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            pathForHistory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"/Server", "history.txt");
             Task readTask = new Task(() =>
             {
                 clientSocket = socket.Accept();
@@ -70,7 +72,9 @@ namespace Server
                             {
                                 command = sb.ToString();
                             }
-                            Console.WriteLine($"Client msg {sb.ToString()}");
+                            if (!sb[0].Equals('.'))
+                                if (File.Exists(pathForHistory))
+                                    File.AppendAllText(pathForHistory, sb.ToString()+"\n");
                             sb.Clear();
                         }
 
@@ -104,9 +108,14 @@ namespace Server
 
         private static void CreateStream(string extension)
         {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"/Server";
             string ip = iPEnd.Address.ToString().Replace('.', ';');
             string file = ip + "_"+ DateTime.Now.Ticks + extension;
-            fs = new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"/Server", file), FileMode.CreateNew, FileAccess.ReadWrite,  FileShare.None);
+
+            if(File.Exists(pathForHistory))
+                File.AppendAllText(pathForHistory, $"Send file {file}\n");
+
+            fs = new FileStream(Path.Combine(path, file), FileMode.CreateNew, FileAccess.ReadWrite,  FileShare.None);
         }
 
         private static void WriteFile(byte[] data, int count)
